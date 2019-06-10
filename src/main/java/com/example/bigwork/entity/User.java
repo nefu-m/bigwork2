@@ -13,7 +13,8 @@ import javax.persistence.*;
 @Entity
 public class User {
     public static final int TEACHER_AUTHORITY = 0;
-    public static final int ADMIN_AUTHORITY = 2;
+    public static final int ADMIN_AUTHORITY = 1;
+    public static final int SUPERADMIN_AUTHORITY = 2;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
