@@ -13,16 +13,19 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity
 public class TaskMessage {
+    private static final int INTIME = 1;
+    private static final int OUTOFTIME  = 0;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String response;
-    private int taskState = 0;//任务状态。1按时完成；0未按时完成；
+    private int taskState = 0;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date taskFinish;
 
     @ManyToOne
     private User user;
-    @ManyToOne
+    @OneToOne
     private Task task;
 }

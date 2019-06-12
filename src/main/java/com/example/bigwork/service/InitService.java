@@ -1,26 +1,33 @@
 package com.example.bigwork.service;
 
+import com.example.bigwork.entity.User;
+import com.example.bigwork.repository.UserRepository;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 
-import com.example.bigwork.dao.UserDao;
-@Service
+@Slf4j
+@Component
 @Transactional
-public class InitService {
+public class InitService implements InitializingBean {
     @Autowired
-    private UserDao userDao;
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserRepository userRepository;
 
-    public void initUserAuthority(){
-        userDao.init();
-    }
-
-    public Boolean isexist_manager(){
-        boolean b=false;
-        if(userDao.init_find()==1){
-            b=true;
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (userRepository.count() == 0) {
+            User user = new User();
+            user.setAuthority(User.ADMIN_AUTHORITY);
+            user.setNumber("1001");
+            user.setPassword(passwordEncoder.encode(user.getNumber()));
+            user.setUserName("BO");
+            userRepository.save(user);
         }
-        return b;
     }
 }

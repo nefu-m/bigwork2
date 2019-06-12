@@ -1,76 +1,58 @@
 package com.example.bigwork.service;
 
-import com.example.bigwork.dao.UserDao;
+
+import com.example.bigwork.entity.ExamMessage;
 import com.example.bigwork.entity.User;
+import com.example.bigwork.repository.UserRepository;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
+@Component
 @Transactional
-public class UserService implements InitializingBean {
+public class UserService {
     @Autowired
-    private InitService initService;
-
+    private PasswordEncoder passwordEncoder;
     @Autowired
-    private UserDao userDao;
+    private UserRepository userRepository;
 
-    public User getUser(String userName, String password){
-        return userDao.find(userName, password);
+    //添加用户信息
+    public User addUser(User user){
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
 
-    public int updatePassword(String newpassword,int id){
-        return userDao.executeUpdate(newpassword, id);
+    //显示所有用户信息
+    public List<User> findAllUsers(){
+        return userRepository.findAll();
+    }
+    //按id查找用户信息
+    public User findUser(int uid){
+        return userRepository.findId(uid);
     }
 
-    public void addUser(User user){
-        userDao.addUser(user);
+    //按姓名查找用户信息
+    public User findUser(String name){
+        return userRepository.findName(name);
     }
 
-    public List<User> allusers(){
-        return userDao.selectteachers();
+    //修改用户信息
+    public User updateUser(User user,int uid){
+        user.setId(uid);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.update(user, uid);
     }
 
-    public List<User> allmanagers(){
-        return userDao.selectmanagers();
+    //删除用户信息
+    public void deleteUser(int id){
+        userRepository.deleteById(id);
     }
 
-    public void removeuser(int id){
-        userDao.deleteusers(id);
-    }
 
-    public void updateuser(User user){
-        userDao.updateuser(user);
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        /**
-         * 初始化的时候先判断数据库里面有没有用户名为罗老师的记录
-         */
-        if(initService.isexist_manager()){
-            System.out.println("初始化管理员已存在");
-        }
-        else{
-            initService.initUserAuthority();
-        }
-    }
-
-    public List<User> allteachers() {
-        // TODO Auto-generated method stub
-        return userDao.selectonlyteachers();
-    }
-
-    public void setAdmin(int id) {
-        // TODO Auto-generated method stub
-        userDao.setAdmin(id);
-    }
-
-    public void removeadmin(int id) {
-        // TODO Auto-generated method stub
-        userDao.deletemsnsgers(id);
-    }
 }

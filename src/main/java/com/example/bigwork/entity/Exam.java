@@ -18,8 +18,6 @@ public class Exam {
     private int id;
     private String examPlace;
     private String examName;
-    private String examNumber;
-    private int examState;
 
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date examStart;
