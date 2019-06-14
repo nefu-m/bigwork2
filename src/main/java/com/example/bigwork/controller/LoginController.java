@@ -32,7 +32,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public void login(@RequestBody User user, HttpServletResponse response) {
-        Optional.ofNullable(userService.getUser(user.getNumber()))
+        Optional.ofNullable(userService.findUser(user.getId()))
                 .ifPresentOrElse(u -> {
                     if (!passwordEncoder.matches(user.getPassword(), u.getPassword())) {
                         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "用户名或密码错误");

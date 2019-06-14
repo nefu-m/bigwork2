@@ -20,5 +20,4 @@ public interface TaskRepository extends CustomizedRepository<Task,Integer>{
     @Query(value = "UPDATE Task t set t=:task WHERE t.id=:tid",nativeQuery = true)
     Task update(@Param("task") Task task, @Param("tid") int tid);
 
-
 }

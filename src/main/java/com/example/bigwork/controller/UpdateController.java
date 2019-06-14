@@ -24,9 +24,8 @@ public class UpdateController {
     public Map<String, String> editPassword(String password, HttpSession session){
         User user=(User) session.getAttribute("user");
         user.setPassword(MD5Utils.md5(password));
-        int count=userService.updatePassword(user.getPassword(), user.getId());
         Map<String, String> map=new HashMap<>();
-        map.put("count", String.valueOf(count));
+        map.put("count", String.valueOf(userService.updateUser(user, user.getId())));
         return map;
     }
 
@@ -34,7 +33,7 @@ public class UpdateController {
     public List<User> selectteachers(){
         //	Map<String, Object> map=new HashMap<>();
         List<User> users=new ArrayList<>();
-        users=	userService.allusers();
+        users=	userService.findAllUsers();
         return users;
     }
 
@@ -42,7 +41,7 @@ public class UpdateController {
     public List<User> selectonlyteachers(){
         //	Map<String, Object> map=new HashMap<>();
         List<User> users=new ArrayList<>();
-        users=	userService.allteachers();
+        users=	userService.findAllTeachers();
         return users;
     }
 
@@ -50,7 +49,7 @@ public class UpdateController {
     public List<User> selectmanagers(){
         //	Map<String, Object> map=new HashMap<>();
         List<User> users=new ArrayList<>();
-        users=	userService.allmanagers();
+        users=	userService.findAllManagers();
         return users;
     }
 
@@ -58,7 +57,7 @@ public class UpdateController {
     public void removeuser(@PathVariable String id){
         String[] ids=id.split(",");
         for(int i=0;i<ids.length;i++){
-            userService.removeuser(Integer.parseInt(ids[i]));
+            userService.deleteUser(Integer.parseInt(ids[i]));
         }
 
     }
@@ -67,7 +66,7 @@ public class UpdateController {
     public void removeadmin(@PathVariable String id){
         String[] ids=id.split(",");
         for(int i=0;i<ids.length;i++){
-            userService.removeadmin(Integer.parseInt(ids[i]));
+            userService.deleteUser(Integer.parseInt(ids[i]));
         }
 
     }
@@ -75,7 +74,7 @@ public class UpdateController {
 
     @RequestMapping("/update")
     public void updateuser(User user){
-        userService.updateuser(user);
+        userService.updateUser(user,user.getId());
     }
 
 
@@ -83,7 +82,7 @@ public class UpdateController {
     public void setadmin(@PathVariable String id){
         String[] ids=id.split(",");
         for(int i=0;i<ids.length;i++){
-            userService.setAdmin(Integer.parseInt(ids[i]));
+            userService.setAuthority(Integer.parseInt(ids[i]));
         }
     }
 }

@@ -32,6 +32,17 @@ public class UserService {
     public List<User> findAllUsers(){
         return userRepository.findAll();
     }
+
+    //显示所有讲师信息
+    public List<User> findAllTeachers(){
+        return userRepository.findAllT();
+    }
+
+    //显示所有管理员信息
+    public List<User> findAllManagers(){
+        return userRepository.findAllM();
+    }
+
     //按id查找用户信息
     public User findUser(int uid){
         return userRepository.findId(uid);
@@ -42,11 +53,26 @@ public class UserService {
         return userRepository.findName(name);
     }
 
+    //登录查找用户信息
+    public User getUserByLogin(int id, String password){
+        User u = userRepository.findId(id);
+        if(passwordEncoder.encode(password)==u.getPassword()){
+            return u;
+        }else{
+            return null;
+        }
+    }
+
     //修改用户信息
     public User updateUser(User user,int uid){
         user.setId(uid);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.update(user, uid);
+    }
+
+    //设置管理员
+    public User setAuthority(int id){
+        return userRepository.setAdmin(1, id);
     }
 
     //删除用户信息

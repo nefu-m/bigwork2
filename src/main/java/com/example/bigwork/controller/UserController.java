@@ -22,14 +22,14 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String login(String username, String password, String checkcode, String exception, HttpSession session, RedirectAttributes attributes){
+    public String login(int id, String password, String checkcode, String exception, HttpSession session, RedirectAttributes attributes){
         String key=(String) session.getAttribute("key");
         if(checkcode.equals(key)){ //验证码正确
             password= MD5Utils.md5(password);
-            User user = userService.getUser(username, password);
+            User user = userService.getUserByLogin(id, password);
             if (user != null) {
                 session.setAttribute("user", user);
-                attributes.addFlashAttribute("name",user.getUserName());
+                attributes.addFlashAttribute("id",user.getId());
                 return "redirect:/index";
             }else{
                 //用户名或者密码错误

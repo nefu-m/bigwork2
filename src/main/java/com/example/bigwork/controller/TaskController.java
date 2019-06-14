@@ -13,6 +13,6 @@ public class TaskController {
 
     @PostMapping("/create")
     public void createTask(Task task){
-        taskService.createTask(task);
+        taskService.addTask(task);
     }
 }
